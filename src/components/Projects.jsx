@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const Projects = ({ projects }) => {
+  const listRef = useRef(null);
   const handleGlowMouseMove = (event) => {
     const target = event.currentTarget;
     const rect = target.getBoundingClientRect();
@@ -17,8 +18,52 @@ const Projects = ({ projects }) => {
     target.style.setProperty('--my', `-1000px`);
   };
 
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+    const total = container.children.length;
+    if (total === 0) return;
+
+    let index = 0;
+    let timerId;
+
+    const scrollToIndex = (i) => {
+      const target = container.children[i];
+      if (target) {
+        container.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+      }
+    };
+
+    const start = () => {
+      stop();
+      // initial nudge
+      scrollToIndex(index);
+      timerId = setInterval(() => {
+        index = (index + 1) % total;
+        scrollToIndex(index);
+      }, 2400);
+    };
+
+    const stop = () => {
+      if (timerId) clearInterval(timerId);
+    };
+
+    const handleEnter = () => stop();
+    const handleLeave = () => start();
+
+    start();
+    container.addEventListener('mouseenter', handleEnter);
+    container.addEventListener('mouseleave', handleLeave);
+
+    return () => {
+      stop();
+      container.removeEventListener('mouseenter', handleEnter);
+      container.removeEventListener('mouseleave', handleLeave);
+    };
+  }, [projects]);
+
   return (
-    <div className="projects-grid">
+    <div className="projects-grid" ref={listRef}>
       {projects.map((p, idx) => (
         <article
           className="project-card"
