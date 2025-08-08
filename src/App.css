@@ -2,6 +2,44 @@
   text-align: center;
 }
 
+/* Typography enhancements */
+:root {
+  --accent: #e5e5e5;
+  --accent-strong: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--accent-strong);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.section-title {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+b, strong {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+.muted {
+  color: #bdbdbd;
+  font-weight: 600;
+}
+
+.nav-inner a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.project-title {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+/* Keep CRA defaults for logo demo (unused) */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -29,10 +67,6 @@
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
