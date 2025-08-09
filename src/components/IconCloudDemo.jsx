@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Cloud } from 'react-icon-cloud';
 
-const IconCloudDemo = ({ slugs }) => {
-  const color = 'f2f2f2';
+const IconCloudDemo = ({ slugs, theme = 'dark' }) => {
   const size = 28;
+  const hoverFilter = theme === 'light'
+    ? 'brightness(1.05) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25))'
+    : 'brightness(1.1) drop-shadow(0 2px 10px rgba(255, 255, 255, 0.15))';
 
   return (
     <div className="icon-cloud-wrap">
@@ -18,17 +20,14 @@ const IconCloudDemo = ({ slugs }) => {
           minSpeed: 0.02,
           freezeActive: false,
           wheelZoom: false,
-          // Make icons cluster closer and flow smoothly
           radiusX: 0.5,
           radiusY: 0.5,
           radiusZ: 0.5,
           zoom: 1.1,
-          // Enhanced mouse interaction for flowing effect
           mouseInteraction: true,
           mouseSpeed: 0.1,
           mouseRadius: 150,
           mouseForce: 1.2,
-          // Continuous rotation for flowing effect
           autoRotate: true,
           autoRotateSpeed: 0.5,
         }}
@@ -58,18 +57,18 @@ const IconCloudDemo = ({ slugs }) => {
               height={size}
               width={size}
               alt={slug}
-              src={`https://cdn.simpleicons.org/${slug}/${color}`}
+              src={`https://cdn.simpleicons.org/${slug}`}
               style={{
-                filter: 'brightness(1)',
+                filter: 'none',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 borderRadius: '4px',
               }}
               onMouseEnter={(e) => {
-                e.target.style.filter = 'brightness(1.4) drop-shadow(0 0 12px rgba(242, 242, 242, 0.8)) saturate(1.2)';
+                e.target.style.filter = hoverFilter;
                 e.target.style.transform = 'rotateX(10deg)';
               }}
               onMouseLeave={(e) => {
-                e.target.style.filter = 'brightness(1)';
+                e.target.style.filter = 'none';
                 e.target.style.transform = 'rotateX(0deg)';
               }}
             />
@@ -82,6 +81,7 @@ const IconCloudDemo = ({ slugs }) => {
 
 IconCloudDemo.propTypes = {
   slugs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  theme: PropTypes.oneOf(['dark', 'light']),
 };
 
 export default IconCloudDemo;

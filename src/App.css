@@ -3,29 +3,26 @@
 }
 
 /* Typography enhancements */
-:root {
-  --accent: #e5e5e5;
-  --accent-strong: #ffffff;
-}
+/* Remove hard-coded colors; use theme variables */
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--accent-strong);
+  color: var(--fg);
   font-weight: 800;
   letter-spacing: 0.3px;
 }
 
 .section-title {
-  color: var(--accent-strong);
+  color: var(--fg);
   font-weight: 800;
 }
 
 b, strong {
-  color: var(--accent-strong);
+  color: var(--fg);
   font-weight: 800;
 }
 
 .muted {
-  color: #bdbdbd;
+  color: var(--muted);
   font-weight: 600;
 }
 
@@ -35,7 +32,7 @@ b, strong {
 }
 
 .project-title {
-  color: var(--accent-strong);
+  color: var(--fg);
   font-weight: 800;
 }
 
@@ -51,6 +48,10 @@ b, strong {
   background: #1a1a1a;
   border: 1px solid #222;
   border-radius: 999px;
+}
+:root[data-theme="light"] *::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
 }
 *::-webkit-scrollbar-track {
   background: transparent;

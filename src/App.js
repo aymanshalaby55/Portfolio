@@ -9,6 +9,7 @@ import "./portfolio.css";
 import "./App.css";
 import Hero from "./components/Hero";
 import Activities from "./components/Activities";
+import Sidebar from "./components/Sidebar";
 const resumeData = {
   name: "Ayman Shalaby",
   title: "Backend | Software Engineer",
@@ -136,6 +137,14 @@ const resumeData = {
 
 function App() {
   const [activeSection, setActiveSection] = useState("hero");
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
   useEffect(() => {
     const ids = ["hero", "intro", "experience", "skills", "projects", "activities", "contact"];
@@ -177,7 +186,27 @@ function App() {
 
   return (
     <div className="app-root">
-      <ParticlesBackground theme="dark" />
+      <ParticlesBackground theme={theme} />
+
+      {/* Mobile sidebar */}
+      <Sidebar
+        theme={theme}
+        toggleTheme={toggleTheme}
+        activeSection={activeSection}
+        sections={[
+          { id: 'hero', label: 'Home' },
+          { id: 'experience', label: 'Experience' },
+          { id: 'skills', label: 'Tools' },
+          { id: 'projects', label: 'Projects' },
+          { id: 'activities', label: 'Activities' },
+          { id: 'contact', label: 'Contact' },
+        ]}
+        links={{
+          github: "https://github.com/aymanshalaby55",
+          linkedin: "https://www.linkedin.com/in/ayman-shalaby/",
+          whatsapp: "https://wa.me/201019010755",
+        }}
+      />
 
       <header className="top-nav">
         <nav className="nav-inner">
@@ -231,6 +260,22 @@ function App() {
             </a>
           </div>
           <div className="nav-actions">
+            <button
+              className="icon-btn"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 4a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1zm0 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm7-6a1 1 0 0 1 1 1h1a1 1 0 1 1 0 2h-1a1 1 0 1 1-2 0 1 1 0 0 1 1-1zm-7 7a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM4 12a1 1 0 0 1 1-1H6a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1zm11.66-6.66a1 1 0 0 1 1.41 0l.71.7a1 1 0 1 1-1.41 1.42l-.71-.71a1 1 0 0 1 0-1.41zM6.22 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM17.78 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM6.22 6.22a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.93 8.34l-.71-.71a1 1 0 0 1 0-1.41z"/>
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.742 13.045A8 8 0 1 1 10.955 3.258a7 7 0 1 0 9.787 9.787z"/>
+                </svg>
+              )}
+            </button>
             <a
               className="icon-btn"
               href={resumeData.contact.github}
@@ -257,12 +302,14 @@ function App() {
             </a>
             <a
               className="icon-btn"
-              href={`tel:${resumeData.contact.phone.replace(/\s+/g, "")}`}
-              aria-label="Call"
-              title={resumeData.contact.phone}
+              href={resumeData.contact.phone && resumeData.contact.phone.includes('wa.me') ? resumeData.contact.phone : `https://wa.me/${(resumeData.contact.phone || '').match(/\d+/g)?.join('') || ''}`}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="WhatsApp"
+              title="WhatsApp"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.56 0 1 .44 1 1V21c0 .56-.44 1-1 1C10.07 22 2 13.93 2 3c0-.56.44-1 1-1h3.5c.56 0 1 .44 1 1 0 1.24.2 2.45.57 3.57.11.36.03.75-.25 1.02l-2.2 2.2z" />
+                <path d="M20 3.5A10.5 10.5 0 0 0 3.84 18.81L3 22l3.28-.86A10.5 10.5 0 1 0 20 3.5zm-8.28 3h.02c.33 0 .68.01 1 .07.29.05.68.22.78.54.2.6.61 2.06.66 2.21.11.25.02.56-.19.73-.3.24-.59.51-.85.82-.28.33-.06.6.11.86.4.6.87 1.15 1.44 1.61.56.45 1.26.88 1.98 1.07.2.05.46.04.62-.12.31-.32.66-.69.98-1.02.17-.18.4-.25.64-.17.34.11 2.11.98 2.15 1 .33.15.55.24.64.38.07.12.07.68-.16 1.33-.19.53-.91 1.02-1.49 1.06-.4.03-.8.03-1.2-.03-2.45-.36-4.51-1.56-6.08-3.53-1.19-1.46-2.05-3.17-2.33-5.03-.08-.53-.13-1.08-.06-1.62.09-.72.53-1.32 1.23-1.43.24-.04.49-.07.74-.06z"/>
               </svg>
             </a>
           </div>
@@ -274,7 +321,7 @@ function App() {
           <Hero
             name={resumeData.name}
             title={resumeData.title}
-            tagline="Fueled by coffee, powered by code"
+            tagline="Born to suffer, forced to code"
             links={{
               github: resumeData.contact.github,
               linkedin: resumeData.contact.linkedin,
