@@ -30,22 +30,30 @@ const Projects = ({ projects }) => {
     const scrollToIndex = (i) => {
       const target = container.children[i];
       if (target) {
-        container.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+        const containerWidth = container.clientWidth;
+        const targetLeft = target.offsetLeft;
+        const targetWidth = target.offsetWidth;
+        const scrollLeft = targetLeft - (containerWidth - targetWidth) / 2;
+        container.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'smooth' });
       }
     };
 
     const start = () => {
       stop();
-      // initial nudge
-      scrollToIndex(index);
-      timerId = setInterval(() => {
-        index = (index + 1) % total;
+      timerId = setTimeout(() => {
         scrollToIndex(index);
-      }, 2400);
+        timerId = setInterval(() => {
+          index = (index + 1) % total;
+          scrollToIndex(index);
+        }, 3000);
+      }, 1000);
     };
 
     const stop = () => {
-      if (timerId) clearInterval(timerId);
+      if (timerId) {
+        clearTimeout(timerId);
+        clearInterval(timerId);
+      }
     };
 
     const handleEnter = () => stop();

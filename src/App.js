@@ -188,6 +188,24 @@ function App() {
     <div className="app-root">
       <ParticlesBackground theme={theme} />
 
+      {/* Mobile theme toggle */}
+      <button
+        className="mobile-theme-toggle icon-btn"
+        onClick={toggleTheme}
+        aria-label="Toggle theme"
+        title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {theme === 'dark' ? (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 4a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1zm0 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm7-6a1 1 0 0 1 1 1h1a1 1 0 1 1 0 2h-1a1 1 0 1 1-2 0 1 1 0 0 1 1-1zm-7 7a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM4 12a1 1 0 0 1 1-1H6a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1zm11.66-6.66a1 1 0 0 1 1.41 0l.71.7a1 1 0 1 1-1.41 1.42l-.71-.71a1 1 0 0 1 0-1.41zM6.22 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM17.78 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM6.22 6.22a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.93 8.34l-.71-.71a1 1 0 0 1 0-1.41z"/>
+          </svg>
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.742 13.045A8 8 0 1 1 10.955 3.258a7 7 0 1 0 9.787 9.787z"/>
+          </svg>
+        )}
+      </button>
+
       {/* Mobile sidebar */}
       <Sidebar
         theme={theme}
