@@ -9,7 +9,8 @@ import "./portfolio.css";
 import "./App.css";
 import Hero from "./components/Hero";
 import Activities from "./components/Activities";
-import Sidebar from "./components/Sidebar";
+// import Sidebar from "./components/Sidebar";
+import CompactSidebar from "./components/CompactSidebar";
 const resumeData = {
   name: "Ayman Shalaby",
   title: "Backend | Software Engineer",
@@ -138,6 +139,8 @@ const resumeData = {
 function App() {
   const [activeSection, setActiveSection] = useState("hero");
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [showCompactSidebar, setShowCompactSidebar] = useState(false);
+  let hideCompactTimeoutRef;
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -155,6 +158,10 @@ function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id);
+            // show compact sidebar briefly on section change
+            setShowCompactSidebar(true);
+            clearTimeout(hideCompactTimeoutRef);
+            hideCompactTimeoutRef = setTimeout(() => setShowCompactSidebar(false), 1600);
           }
         });
       },
@@ -184,6 +191,17 @@ function App() {
     return () => revealables.forEach((el) => revealObserver.unobserve(el));
   }, []);
 
+  useEffect(() => {
+    // also show compact sidebar briefly on wheel scroll
+    const onWheel = () => {
+      setShowCompactSidebar(true);
+      clearTimeout(hideCompactTimeoutRef);
+      hideCompactTimeoutRef = setTimeout(() => setShowCompactSidebar(false), 1400);
+    };
+    window.addEventListener('wheel', onWheel, { passive: true });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, []);
+
   return (
     <div className="app-root">
       <ParticlesBackground theme={theme} />
@@ -197,19 +215,18 @@ function App() {
       >
         {theme === 'dark' ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 4a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1zm0 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm7-6a1 1 0 0 1 1 1h1a1 1 0 1 1 0 2h-1a1 1 0 1 1-2 0 1 1 0 0 1 1-1zm-7 7a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM4 12a1 1 0 0 1 1-1H6a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1zm11.66-6.66a1 1 0 0 1 1.41 0l.71.7a1 1 0 1 1-1.41 1.42l-.71-.71a1 1 0 0 1 0-1.41zM6.22 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM17.78 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM6.22 6.22a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.93 8.34l-.71-.71a1 1 0 0 1 0-1.41z"/>
+            <path d="M12 3a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1zm6.36 2.05a1 1 0 0 1 1.41 0l.71.7a1 1 0 1 1-1.41 1.42l-.71-.71a1 1 0 0 1 0-1.41zM20 11a1 1 0 0 1 1 1v0a1 1 0 1 1-2 0v0a1 1 0 0 1 1-1zM5.05 5.05a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 5.76 7.2l-.71-.71a1 1 0 0 1 0-1.41zM3 12a1 1 0 0 1 1-1h0a1 1 0 1 1 0 2h0a1 1 0 0 1-1-1zm2.05 6.36a1 1 0 0 1 0-1.41l.71-.71A1 1 0 1 1 7.2 17.6l-.71.71a1 1 0 0 1-1.41 0zM12 19a1 1 0 0 1 1 1v0a1 1 0 1 1-2 0v0a1 1 0 0 1 1-1zm6.36-2.05a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 19.07 19l-.71-.71a1 1 0 0 1 0-1.41zM12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5z"/>
           </svg>
         ) : (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M20.742 13.045A8 8 0 1 1 10.955 3.258a7 7 0 1 0 9.787 9.787z"/>
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
         )}
       </button>
 
-      {/* Mobile sidebar */}
-      <Sidebar
-        theme={theme}
-        toggleTheme={toggleTheme}
+      {/* Compact sidebar (appears briefly during navigation/scroll) */}
+      <CompactSidebar
+        visible={showCompactSidebar}
         activeSection={activeSection}
         sections={[
           { id: 'hero', label: 'Home' },
@@ -219,11 +236,6 @@ function App() {
           { id: 'activities', label: 'Activities' },
           { id: 'contact', label: 'Contact' },
         ]}
-        links={{
-          github: "https://github.com/aymanshalaby55",
-          linkedin: "https://www.linkedin.com/in/ayman-shalaby/",
-          whatsapp: "https://wa.me/201019010755",
-        }}
       />
 
       <header className="top-nav">
@@ -286,11 +298,11 @@ function App() {
             >
               {theme === 'dark' ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 4a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1zm0 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm7-6a1 1 0 0 1 1 1h1a1 1 0 1 1 0 2h-1a1 1 0 1 1-2 0 1 1 0 0 1 1-1zm-7 7a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1zM4 12a1 1 0 0 1 1-1H6a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1zm11.66-6.66a1 1 0 0 1 1.41 0l.71.7a1 1 0 1 1-1.41 1.42l-.71-.71a1 1 0 0 1 0-1.41zM6.22 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM17.78 17.78a1 1 0 0 1 1.41 0l.71.71a1 1 0 1 1-1.41 1.41l-.71-.7a1 1 0 0 1 0-1.42zM6.22 6.22a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 6.93 8.34l-.71-.71a1 1 0 0 1 0-1.41z"/>
+                  <path d="M12 3a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1zm6.36 2.05a1 1 0 0 1 1.41 0l.71.7a1 1 0 1 1-1.41 1.42l-.71-.71a1 1 0 0 1 0-1.41zM20 11a1 1 0 0 1 1 1v0a1 1 0 1 1-2 0v0a1 1 0 0 1 1-1zM5.05 5.05a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 5.76 7.2l-.71-.71a1 1 0 0 1 0-1.41zM3 12a1 1 0 0 1 1-1h0a1 1 0 1 1 0 2h0a1 1 0 0 1-1-1zm2.05 6.36a1 1 0 0 1 0-1.41l.71-.71A1 1 0 1 1 7.2 17.6l-.71.71a1 1 0 0 1-1.41 0zM12 19a1 1 0 0 1 1 1v0a1 1 0 1 1-2 0v0a1 1 0 0 1 1-1zm6.36-2.05a1 1 0 0 1 1.41 0l.71.71A1 1 0 1 1 19.07 19l-.71-.71a1 1 0 0 1 0-1.41zM12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5z"/>
                 </svg>
               ) : (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M20.742 13.045A8 8 0 1 1 10.955 3.258a7 7 0 1 0 9.787 9.787z"/>
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
               )}
             </button>
@@ -307,6 +319,7 @@ function App() {
             links={{
               github: resumeData.contact.github,
               linkedin: resumeData.contact.linkedin,
+              email: resumeData.contact.email,
               whatsapp: resumeData.contact.phone,
             }}
           />

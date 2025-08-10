@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Cloud } from 'react-icon-cloud';
 
 const IconCloudDemo = ({ slugs, theme = 'dark' }) => {
-  const size = 28;
+  const isMobile = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 680px)').matches;
+  const size = isMobile ? 40 : 28;
   const hoverFilter = theme === 'light'
     ? 'brightness(1.05) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25))'
     : 'brightness(1.1) drop-shadow(0 2px 10px rgba(255, 255, 255, 0.15))';
@@ -23,7 +24,7 @@ const IconCloudDemo = ({ slugs, theme = 'dark' }) => {
           radiusX: 0.5,
           radiusY: 0.5,
           radiusZ: 0.5,
-          zoom: 1.1,
+          zoom: isMobile ? 1.5 : 1.1,
           mouseInteraction: true,
           mouseSpeed: 0.1,
           mouseRadius: 150,

@@ -257,14 +257,19 @@ a:hover { text-decoration: underline; text-decoration-color: var(--accent-3); }
   overflow: hidden;
   cursor: pointer;
 }
-.hero-photo { display: block; width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: center 12%; border-radius: 50%; filter: grayscale(100%); transition: filter 280ms ease, transform 280ms ease; }
-.hero-photo-wrap:hover .hero-photo { filter: none; transform: translateY(-2px) scale(1.01); }
+.hero-photo { display: block; width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: center 12%; border-radius: 50%; filter: none; transition: transform 280ms ease; }
+.hero-photo-wrap:hover .hero-photo { transform: translateY(-2px) scale(1.01); }
 .hero-content { text-align: left; }
 .hero-name { margin: 0; font-size: clamp(2rem, 4vw + 1rem, 3.4rem); color: var(--fg); letter-spacing: 0.4px; }
 .hero-title { margin: 0.25rem 0 0.5rem; color: var(--accent); font-weight: 700; font-size: clamp(1.1rem, 1.6vw + 0.4rem, 1.8rem); }
 .hero-tagline { margin: 0.4rem 0 1.2rem; color: var(--fg); opacity: 0.9; font-size: 1.05rem; }
-.hero-social { display: flex; gap: 0.6rem; align-items: center; }
-.hero-social-icons { display: flex; gap: 1rem; justify-content: center; margin: 1.2rem 0; }
+.hero-social { display: flex; justify-content: center; align-items: center; gap: 0.5rem; width: 100%; margin-top: 0.8rem; }
+.hero-social .icon-btn { width: 28px; height: 28px; }
+.hero-social .icon-btn svg { width: 16px; height: 16px; }
+/* Ensure square-logo variant matches same size */
+.hero-social .icon-btn.icon-square svg { width: 16px; height: 16px; }
+.hero-social .icon-btn.icon-square { width: 34px; height: 34px; }
+.hero-social .icon-btn.icon-square img { width: 30px; height: 30px; display: block; }
 .hero-down { display: inline-flex; margin-top: 1.2rem; color: var(--muted); }
 .hero-down:hover { color: var(--fg); text-decoration: none; transform: translateY(1px); }
 
@@ -431,9 +436,140 @@ a:hover { text-decoration: underline; text-decoration-color: var(--accent-3); }
 .sidebar-link.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .sidebar-actions { display: flex; gap: 0.4rem; align-items: center; justify-content: space-between; margin-top: 0.6rem; }
 
+/* Compact sidebar (brief on navigation) */
+.compact-sidebar {
+  position: fixed;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease, background 220ms ease, border-color 220ms ease;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+:root[data-theme="light"] .compact-sidebar { 
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.compact-sidebar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.compact-sidebar.right-side { left: auto; right: 12px; }
+.compact-sidebar-nav {
+  display: grid;
+  gap: 6px;
+  align-items: center;
+}
+.compact-sidebar-link {
+  display: block;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--fg);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.compact-sidebar-link:hover { text-decoration: none; }
+.compact-sidebar-link.active { color: var(--accent); text-shadow: 0 0 16px rgba(99,123,255,0.6); }
+.compact-sidebar-link.neighbor.blur { opacity: 0.6; filter: blur(0.5px); }
+
+/* Hide legacy mobile sidebar toggle if still in DOM */
+.sidebar-toggle { display: none !important; }
+
 /* Show sidebar toggle, mobile theme toggle and hide top nav on small screens */
 @media (max-width: 680px) {
   .sidebar-toggle { display: inline-flex; }
   .mobile-theme-toggle { display: inline-flex; }
   header.top-nav { display: none; }
+} 
+
+/* Brand colors for social icons */
+.brand-github { color: #c9d1d9; background: #161b22; border-color: #30363d; }
+.brand-github:hover { background: #0d1117; border-color: #30363d; }
+
+.brand-linkedin { color: #ffffff; background: #0a66c2; border-color: #0a66c2; }
+.brand-linkedin:hover { background: #085aab; border-color: #085aab; }
+
+.brand-email { color: #ffffff; background: #ef4444; border-color: #ef4444; }
+.brand-email:hover { background: #dc2626; border-color: #dc2626; }
+
+.brand-whatsapp { color: #ffffff; background: #25D366; border-color: #25D366; }
+.brand-whatsapp:hover { background: #1ebe57; border-color: #1ebe57; }
+
+/* Reinforce brand colors in light theme as well */
+:root[data-theme="light"] .brand-github { color: #0f172a; background: #f1f5f9; border-color: #cbd5e1; }
+:root[data-theme="light"] .brand-github:hover { background: #e2e8f0; border-color: #cbd5e1; }
+:root[data-theme="light"] .brand-linkedin { color: #ffffff; background: #0a66c2; border-color: #0a66c2; }
+:root[data-theme="light"] .brand-email { color: #ffffff; background: #ef4444; border-color: #ef4444; }
+
+/* Contact icons tint */
+.contact-item .btn-icon svg { color: inherit; }
+.contact-item:nth-child(1) .btn-icon svg { color: #25D366; }
+.contact-item:nth-child(2) .btn-icon svg { color: #ef4444; }
+/* Ensure action button icons are colored too */
+.contact-item:nth-child(2) .btn-link .btn-icon svg { color: #ef4444; }
+
+/* Button link brand accents in contact cards (inherit on hover) */
+.contact-item .btn-link { color: var(--fg); }
+.contact-item:nth-child(1) .btn-link:hover { border-color: #25D366; box-shadow: inset 0 0 0 1px #25D366; }
+.contact-item:nth-child(2) .btn-link:hover { border-color: #ef4444; box-shadow: inset 0 0 0 1px #ef4444; }
+/* Standardize contact action icon size */
+.contact-item .btn-link .btn-icon svg { width: 16px; height: 16px; }
+
+/* Square logo buttons should not have brand background from class */
+.icon-square { background: transparent !important; border-color: transparent !important; padding: 0; }
+.icon-square svg { display: block; } 
+
+/* Mobile adjustments for compact sidebar */
+@media (max-width: 680px) {
+  .compact-sidebar.right-side {
+    right: 10px;
+    left: auto;
+    top: auto;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    transform: none;
+  }
+  .compact-sidebar-nav {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+  }
+  /* Hide neighbors on mobile; show only current section */
+  .compact-sidebar-link.neighbor { display: none; }
+  .compact-sidebar-link {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border-radius: 999px;
+  }
+  .compact-sidebar-link.active {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    text-shadow: none;
+    color: var(--fg);
+    backdrop-filter: blur(8px) saturate(120%);
+  }
+  :root[data-theme="light"] .compact-sidebar-link.active {
+    background: rgba(255,255,255,0.65);
+    border-color: #e5e7eb;
+    color: #0f172a;
+  }
+  .compact-sidebar-link.neighbor.blur { filter: blur(1px); opacity: 0.55; }
+} 
+
+/* About: mobile responsiveness */
+@media (max-width: 680px) {
+  .mac-window { border-radius: 14px; }
+  .window-header { padding: 8px 10px; }
+  .window-content { padding: 1rem; }
+  .code-block { font-size: 0.95rem; line-height: 1.6; }
 } 
